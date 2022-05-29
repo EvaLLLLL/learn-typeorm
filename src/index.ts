@@ -4,19 +4,26 @@ import { Photo } from './entity/Photo'
 
 createConnection()
   .then(async connection => {
-    let photo = new Photo()
-    photo.name = 'test repositories'
-    photo.description = 'hahahahahaha'
-    photo.filename = 'test.jpg'
-    photo.views = 20
-    photo.isPublished = true
-
     let photoRepository = connection.getRepository(Photo)
+    let allPhotos = await photoRepository.find()
+    console.log('All photos from the db: ', allPhotos)
 
-    await photoRepository.save(photo)
-    console.log(`#${photo.id} photo has been saved`)
+    let firstPhoto = await photoRepository.findOne(1)
+    console.log('First photo from the db: ', firstPhoto)
 
-    let savedPhotos = await photoRepository.find()
-    console.log('All photos from the db: ', savedPhotos)
+    let meAndBearsPhoto = await photoRepository.findOne({
+      name: 'Me and Bears',
+    })
+    console.log('Me and Bears photo from the db: ', meAndBearsPhoto)
+
+    let allViewedPhotos = await photoRepository.find({ views: 1 })
+    console.log('All viewed photos: ', allViewedPhotos)
+
+    let allPublishedPhotos = await photoRepository.find({ isPublished: true })
+    console.log('All published photos: ', allPublishedPhotos)
+
+    let [allps, photosCount] = await photoRepository.findAndCount()
+    console.log('All photos: ', allps)
+    console.log('Photos count: ', photosCount)
   })
   .catch(error => console.log(error))
