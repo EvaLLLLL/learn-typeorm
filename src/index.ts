@@ -1,15 +1,34 @@
 import 'reflect-metadata'
 import { createConnection } from 'typeorm'
 import { Photo } from './entity/Photo'
+import { PhotoMetadata } from './entity/PhotoMetadata'
 
 createConnection()
   .then(async connection => {
-    let photos = await connection
-      .getRepository(Photo)
-      .createQueryBuilder('photo')
-      .innerJoinAndSelect('photo.metadata', 'metadata')
-      .getMany()
+    // 创建 photo 对象
+    let photo = new Photo()
+    photo.name = 'Me and Bears'
+    photo.description = 'I am near polar bears'
+    photo.filename = 'photo-with-bears.jpg'
+    photo.isPublished = true
+    photo.views = 233
 
-    console.log(photos)
+    // 创建 photo metadata 对象
+    let metadata = new PhotoMetadata()
+    metadata.height = 640
+    metadata.width = 480
+    metadata.compressed = true
+    metadata.comment = 'cybershoot'
+    metadata.orientation = 'portait'
+
+    photo.metadata = metadata // this way we connect them
+
+    // 获取 repository
+    let photoRepository = connection.getRepository(Photo)
+
+    // 保存photo的同时保存metadata
+    await photoRepository.save(photo)
+
+    console.log('Photo is saved, photo metadata is saved too.')
   })
   .catch(error => console.log(error))
