@@ -6,7 +6,6 @@ createConnection()
   .then(async connection => {
     let photoRepository = connection.getRepository(Photo)
     let photoToUpdate = await photoRepository.findOne(1)
-    photoToUpdate.name = 'hi'
-    await photoRepository.save(photoToUpdate)
+    await photoRepository.remove(photoToUpdate)
   })
   .catch(error => console.log(error))
