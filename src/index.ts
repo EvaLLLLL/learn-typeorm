@@ -2,6 +2,7 @@ import 'reflect-metadata'
 import { createConnection } from 'typeorm'
 import { Photo } from './entity/Photo'
 import { PhotoMetadata } from './entity/PhotoMetadata'
+import { Author } from './entity/Author'
 
 createConnection()
   .then(async connection => {
@@ -12,6 +13,10 @@ createConnection()
     photo.filename = 'photo-with-bears.jpg'
     photo.isPublished = true
     photo.views = 233
+
+    let ellen = new Author()
+    ellen.name = 'ellen'
+    photo.author = ellen
 
     // 创建 photo metadata 对象
     let metadata = new PhotoMetadata()
