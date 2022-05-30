@@ -3,6 +3,7 @@ import { createConnection } from 'typeorm'
 import { Photo } from './entity/Photo'
 import { PhotoMetadata } from './entity/PhotoMetadata'
 import { Author } from './entity/Author'
+import { Album } from './entity/Album'
 
 createConnection()
   .then(async connection => {
@@ -27,6 +28,10 @@ createConnection()
     metadata.orientation = 'portait'
 
     photo.metadata = metadata // this way we connect them
+
+    let album = new Album()
+    album.name = 'chapter-1'
+    album.photos = [photo]
 
     // 获取 repository
     let photoRepository = connection.getRepository(Photo)
